@@ -1,0 +1,107 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/apache/kafka
+  pullPolicy: IfNotPresent
+  tag: "4.1.1"
+
+imagePullSecrets: []
+
+nameOverride: ""
+
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+kafka:
+  nodeId: 1
+  processRoles: "broker,controller"
+
+  listeners: "INTERNAL://:9092,EXTERNAL://:30092,CONTROLLER://:9093"
+
+  advertisedListeners: "INTERNAL://kafka-server:9092,EXTERNAL://192.168.65.3:30092"
+
+  controllerListenerNames: "CONTROLLER"
+
+  listenerSecurityProtocolMap: >
+    INTERNAL:PLAINTEXT,
+    EXTERNAL:PLAINTEXT,
+    CONTROLLER:PLAINTEXT
+
+  controllerQuorumVoters: "1@kafka-server:9093"
+
+  offsetsTopicReplicationFactor: 1
+  transactionStateLogReplicationFactor: 1
+  transactionStateLogMinIsr: 1
+  groupInitialRebalanceDelayMs: 0
+  interBrokerListenerName: "INTERNAL"
+  numPartitions: 3
+
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30092
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+httpRoute:
+  enabled: false
+  annotations: {}
+  parentRefs:
+    - name: gateway
+      sectionName: http
+  hostnames:
+    - chart-example.local
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /headers
+
+resources: {}
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
