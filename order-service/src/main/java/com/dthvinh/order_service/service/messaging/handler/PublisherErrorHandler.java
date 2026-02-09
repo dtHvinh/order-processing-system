@@ -1,4 +1,4 @@
-package com.dthvinh.order_service.service;
+package com.dthvinh.order_service.service.messaging.handler;
 
 import org.apache.kafka.clients.producer.RecordMetadata;
 
