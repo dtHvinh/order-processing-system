@@ -1,57 +1,26 @@
 replicaCount: 1
-
 image:
-  repository: docker.io/apache/kafka
+  repository: provectuslabs/kafka-ui
   pullPolicy: IfNotPresent
-  tag: "4.1.1"
-
+  tag: "v0.7.2"
 imagePullSecrets: []
-
 nameOverride: ""
-
 fullnameOverride: ""
-
 serviceAccount:
   create: true
   automount: true
   annotations: {}
   name: ""
-
 podAnnotations: {}
-
 podLabels: {}
 
 podSecurityContext: {}
 
 securityContext: {}
-
-kafka:
-  nodeId: 1
-  processRoles: "broker,controller"
-  listeners: "INTERNAL://:9092,EXTERNAL://:30092,CONTROLLER://:9093"
-  externalAdvertisedHost: "192.168.65.3"
-  advertisedListeners: ""
-  controllerListenerNames: "CONTROLLER"
-  listenerSecurityProtocolMap: >
-    INTERNAL:PLAINTEXT,
-    EXTERNAL:PLAINTEXT,
-    CONTROLLER:PLAINTEXT
-  controllerQuorumVoters: ""
-  offsetsTopicReplicationFactor: 1
-  transactionStateLogReplicationFactor: 1
-  transactionStateLogMinIsr: 1
-  groupInitialRebalanceDelayMs: 0
-  interBrokerListenerName: "INTERNAL"
-  numPartitions: 3
-
 service:
   type: NodePort
-  ports:
-    internal: 9092
-    controller: 9093
-    external: 30092
-  nodePorts:
-    external: 30092
+  port: 8080
+  nodePort: 30090
 ingress:
   enabled: false
   className: ""
@@ -62,7 +31,6 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
   tls: []
-
 httpRoute:
   enabled: false
   annotations: {}
@@ -78,27 +46,20 @@ httpRoute:
             value: /headers
 
 resources: {}
-
 livenessProbe:
-  tcpSocket:
-    port: internal
-  initialDelaySeconds: 10
-  periodSeconds: 10
-
+  httpGet:
+    path: /
+    port: http
 readinessProbe:
-  tcpSocket:
-    port: internal
-  initialDelaySeconds: 5
-  periodSeconds: 10
-
+  httpGet:
+    path: /
+    port: http
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-
 volumes: []
-
 volumeMounts: []
 
 nodeSelector: {}
@@ -106,3 +67,8 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+kafka:
+  bootstrapServers: ""
+  serviceName: ""
+  bootstrapPort: 9092

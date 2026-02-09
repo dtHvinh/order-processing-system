@@ -7,10 +7,22 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - name: internal
+      port: {{ .Values.service.ports.internal }}
+      targetPort: internal
       protocol: TCP
-      name: http
-      nodePort: {{ .Values.service.nodePort }}
+
+    - name: controller
+      port: {{ .Values.service.ports.controller }}
+      targetPort: controller
+      protocol: TCP
+
+    - name: external
+      port: {{ .Values.service.ports.external }}
+      targetPort: external
+      protocol: TCP
+      {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePorts.external }}
+      nodePort: {{ .Values.service.nodePorts.external }}
+      {{- end }}
   selector:
     {{- include "kafka-server.selectorLabels" . | nindent 4 }}

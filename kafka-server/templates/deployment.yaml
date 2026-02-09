@@ -51,7 +51,7 @@ spec:
               value: "{{ .Values.kafka.listeners }}"
 
             - name: KAFKA_ADVERTISED_LISTENERS
-              value: "{{ .Values.kafka.advertisedListeners }}"
+              value: '{{- if .Values.kafka.advertisedListeners -}}{{ .Values.kafka.advertisedListeners }}{{- else -}}INTERNAL://{{ include "kafka-server.fullname" . }}:{{ .Values.service.ports.internal }},EXTERNAL://{{ .Values.kafka.externalAdvertisedHost }}:{{ .Values.service.nodePorts.external | default .Values.service.ports.external }}{{- end -}}'
 
             - name: KAFKA_CONTROLLER_LISTENER_NAMES
               value: "{{ .Values.kafka.controllerListenerNames }}"
@@ -60,7 +60,7 @@ spec:
               value: "{{ .Values.kafka.listenerSecurityProtocolMap }}"
 
             - name: KAFKA_CONTROLLER_QUORUM_VOTERS
-              value: "{{ .Values.kafka.controllerQuorumVoters }}"
+              value: '{{- if .Values.kafka.controllerQuorumVoters -}}{{ .Values.kafka.controllerQuorumVoters }}{{- else -}}{{ .Values.kafka.nodeId }}@localhost:{{ .Values.service.ports.controller }}{{- end -}}'
 
             - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
               value: "{{ .Values.kafka.offsetsTopicReplicationFactor }}"
@@ -81,8 +81,14 @@ spec:
               value: "{{ .Values.kafka.interBrokerListenerName }}"
 
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
+            - name: internal
+              containerPort: {{ .Values.service.ports.internal }}
+              protocol: TCP
+            - name: controller
+              containerPort: {{ .Values.service.ports.controller }}
+              protocol: TCP
+            - name: external
+              containerPort: {{ .Values.service.ports.external }}
               protocol: TCP
           {{- with .Values.livenessProbe }}
           livenessProbe:
