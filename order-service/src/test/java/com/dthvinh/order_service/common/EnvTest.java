@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class EnvTest {
     @Test
     public void testGetBootstrapServer() {
-        assertEquals(Env.KAFKA_BOOTSTRAP_SERVERS, System.getenv("KAFKA_BOOTSTRAP_SERVERS"));
+        assertEquals(Env.KAFKA_BOOTSTRAP_SERVER, System.getenv("KAFKA_BOOTSTRAP_SERVERS"));
     }
 
     @Test

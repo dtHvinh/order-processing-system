@@ -1,0 +1,35 @@
+info:
+  name: POST Create order
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{u}}orders"
+  body:
+    type: json
+    data: |-
+      {
+        "userId": "user_123",
+        "items": [
+          {
+            "productId": "P001",
+            "quantity": 2,
+            "unitPrice": 150000
+          },
+          {
+            "productId": "P002",
+            "quantity": 1,
+            "unitPrice": 99000
+          }
+        ],
+        "totalAmount": 399000,
+        "currency": "VND"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,5 +1,7 @@
 package com.dthvinh.order_service.service.messaging.publisher.impl;
 
+import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.List;
 import java.util.Properties;
 
@@ -16,12 +18,27 @@ import com.dthvinh.order_service.common.Env;
 import com.dthvinh.order_service.service.messaging.handler.PublisherErrorHandler;
 import com.dthvinh.order_service.service.messaging.publisher.Publisher;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 @Service
 public class PublisherImpl implements Publisher {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final KafkaProducer<String, String> producer;
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Instant.class, new JsonSerializer<Instant>() {
+                @Override
+                public JsonElement serialize(
+                        Instant src,
+                        Type typeOfSrc,
+                        JsonSerializationContext context) {
+                    return new JsonPrimitive(src.toString());
+                }
+            })
+            .create();
     private final List<PublisherErrorHandler> errorHandlers;
 
     public PublisherImpl(List<PublisherErrorHandler> errorHandlers) {
@@ -37,7 +54,7 @@ public class PublisherImpl implements Publisher {
     }
 
     @Override
-    public void publish(String topic, String key, Object value) {
+    public <T> void publish(String topic, String key, T value) {
         String jsonValue = gson.toJson(value);
         publish(topic, key, jsonValue);
     }
@@ -45,7 +62,7 @@ public class PublisherImpl implements Publisher {
     public Properties getDefaultProperties() {
         Properties props = new Properties();
 
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Env.KAFKA_BOOTSTRAP_SERVERS);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Env.KAFKA_BOOTSTRAP_SERVER);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 

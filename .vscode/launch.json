@@ -6,7 +6,10 @@
       "name": "OrderServiceApplication",
       "request": "launch",
       "mainClass": "com.dthvinh.order_service.OrderServiceApplication",
-      "projectName": "order-service"
+      "projectName": "order-service",
+      "env": {
+        "KAFKA_BOOTSTRAP_SERVER": "localhost:30092"
+      }
     }
   ],
   "compounds": []
