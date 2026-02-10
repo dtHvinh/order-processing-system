@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 import com.dthvinh.order_service.models.CreateOrderRequest;
 import com.dthvinh.order_service.models.event.OrderCreatedEvent;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EventMapper {
     EventMapper INSTANCE = Mappers.getMapper(EventMapper.class);
 
