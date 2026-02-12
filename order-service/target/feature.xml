@@ -15,5 +15,7 @@
         <feature>cxf-jackson</feature>
 
         <bundle>mvn:com.dthvinh/order-service/0.0.0</bundle>
+        <bundle start-level="80">wrap:mvn:org.apache.kafka/kafka-clients/4.1.1</bundle>
+        <bundle start-level="80">mvn:com.google.code.gson/gson/2.13.2</bundle>
     </feature>
 </features>

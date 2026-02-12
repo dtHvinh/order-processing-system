@@ -39,6 +39,20 @@
             <version>2.0.17</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>4.1.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -112,10 +126,6 @@
     </build>
 
     <profiles>
-        <!--
-                    Runs: mvn clean package, then docker build, then helm upgrade/install.
-                    Usage: mvn -Plocal-deploy clean package
-                -->
         <profile>
             <id>local-deploy</id>
             <build>
