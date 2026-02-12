@@ -6,7 +6,7 @@
 
     <groupId>com.dthvinh</groupId>
     <artifactId>order-service</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.0</version>
     <packaging>bundle</packaging>
 
     <properties>
@@ -15,6 +15,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cxf.version>3.6.5</cxf.version>
         <javax.ws.rs.version>2.1.1</javax.ws.rs.version>
+
+        <!-- local docker/helm defaults (can be overridden via -D...) -->
+        <docker.image.repository>${project.artifactId}</docker.image.repository>
+        <docker.image.tag>${project.version}</docker.image.tag>
+
+        <helm.chart.dir>${project.basedir}/src/main/resources/helm</helm.chart.dir>
+        <helm.release.name>${project.artifactId}</helm.release.name>
+        <helm.namespace>default</helm.namespace>
     </properties>
 
     <dependencies>
@@ -102,5 +110,72 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!--
+                    Runs: mvn clean package, then docker build, then helm upgrade/install.
+                    Usage: mvn -Plocal-deploy clean package
+                -->
+        <profile>
+            <id>local-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <executions>
+                            <execution>
+                                <id>docker-build</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>docker</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>build</argument>
+                                        <argument>-t</argument>
+                                        <argument>${docker.image.repository}:${docker.image.tag}</argument>
+                                        <argument>-f</argument>
+                                        <argument>${project.basedir}/Dockerfile</argument>
+                                        <argument>--build-arg</argument>
+                                        <argument>APP_VERSION=${docker.image.tag}</argument>
+                                        <argument>.</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>helm-upgrade-install</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>helm</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>upgrade</argument>
+                                        <argument>--install</argument>
+                                        <argument>${helm.release.name}</argument>
+                                        <argument>${helm.chart.dir}</argument>
+                                        <argument>--namespace</argument>
+                                        <argument>${helm.namespace}</argument>
+                                        <argument>--create-namespace</argument>
+                                        <argument>--set</argument>
+                                        <argument>image.repository=${docker.image.repository}</argument>
+                                        <argument>--set</argument>
+                                        <argument>image.tag=${docker.image.tag}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -10,7 +10,7 @@ WORKDIR $KARAF_HOME
 COPY --from=karaf $KARAF_HOME/ $KARAF_HOME/
 
 COPY target/order-service-${APP_VERSION}.jar ${KARAF_HOME}/system/com/dthvinh/order-service/${APP_VERSION}/order-service-${APP_VERSION}.jar
-COPY src/main/resources/karaf/feature.xml ${KARAF_HOME}/deploy/feature.xml
+COPY target/feature.xml ${KARAF_HOME}/deploy/feature.xml
 
 EXPOSE 8181
 

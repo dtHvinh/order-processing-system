@@ -1,5 +1,11 @@
 {
   "java.compile.nullAnalysis.mode": "automatic",
   "java.configuration.updateBuildConfiguration": "automatic",
-  "github.copilot.nextEditSuggestions.enabled": false
+  "github.copilot.nextEditSuggestions.enabled": false,
+  "maven.terminal.favorites": [
+    {
+      "command": "clean package -Plocal-deploy -DskipTests",
+      "debug": false
+    }
+  ]
 }

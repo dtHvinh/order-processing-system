@@ -30,3 +30,22 @@ Kafka (Async Events)
   - `helm upgrade --install kafka-server .\kafka-server`
 - What you may need to change on a different machine (IP/ports):
   - See [kafka-server/README.md](kafka-server/README.md)
+
+### Order Service (build + docker + helm)
+
+The `order-service` module has a Maven profile that will:
+
+- build the Java bundle (`clean` + `package`),
+- build a Docker image tagged with the Maven `${project.version}`,
+- run `helm upgrade --install` while setting `image.repository` and `image.tag` to match.
+
+From `order-processing-system/order-service`:
+
+- `mvn -Plocal-deploy clean install`
+
+Optional overrides:
+
+- Custom image repo/name:
+  - `mvn -Plocal-deploy -Ddocker.image.repository=order-service clean install`
+- Custom namespace / release:
+  - `mvn -Plocal-deploy -Dhelm.namespace=dev -Dhelm.release.name=order-service clean install`

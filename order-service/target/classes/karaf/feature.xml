@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="order-service">
     <repository>
-        mvn:org.apache.karaf.features/standard/4.4.9/xml/features
+        mvn:org.apache.karaf.features/standard/4.4.6/xml/features
     </repository>
 
     <repository>
@@ -10,9 +10,9 @@
 
 
     <feature name="order-service-api" version="${project.version}">
-        <feature>cxf-jackson</feature>
-        <feature>aries-blueprint</feature>
         <feature>cxf-jaxrs</feature>
+        <feature>aries-blueprint</feature>
+        <feature>cxf-jackson</feature>
 
         <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle>
     </feature>
