@@ -1,30 +1,17 @@
-FROM maven:3.9.9-eclipse-temurin-21 AS build
-WORKDIR /workspace
+FROM docker.io/apache/karaf:4.4.6 AS karaf
 
-COPY pom.xml ./
-COPY .mvn/ .mvn/
-COPY mvnw ./
-COPY mvnw.cmd ./
+FROM docker.io/eclipse-temurin:17.0.17_10-jre-ubi10-minimal
 
-RUN mvn -q -DskipTests dependency:go-offline
+ARG APP_VERSION
 
-COPY src/ src/
-RUN mvn -DskipTests package
+ENV KARAF_HOME=/opt/apache-karaf-4.4.6
+WORKDIR $KARAF_HOME
 
+COPY --from=karaf $KARAF_HOME/ $KARAF_HOME/
 
-FROM eclipse-temurin:21-jre-jammy
-WORKDIR /app
+COPY target/order-service-${APP_VERSION}.jar ${KARAF_HOME}/system/com/dthvinh/order-service/${APP_VERSION}/order-service-${APP_VERSION}.jar
+COPY src/main/resources/karaf/feature.xml ${KARAF_HOME}/deploy/feature.xml
 
-RUN addgroup --system app && adduser --system --ingroup app app
+EXPOSE 8181
 
-COPY --from=build /workspace/target/*.jar /app/app.jar
-
-ENV SERVER_PORT=8080 \
-	KAFKA_BOOTSTRAP_SERVER=kafka-server:9092 \
-	JAVA_OPTS=""
-
-EXPOSE 8080
-
-USER app
-
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+CMD ["bin/karaf", "run"]
