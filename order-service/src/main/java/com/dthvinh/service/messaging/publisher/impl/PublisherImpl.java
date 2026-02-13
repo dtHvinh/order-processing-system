@@ -1,4 +1,4 @@
-package com.dthvinh.rs.messaging.publisher.impl;
+package com.dthvinh.service.messaging.publisher.impl;
 
 import java.util.Properties;
 
@@ -10,20 +10,26 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dthvinh.rs.messaging.publisher.Publisher;
+import com.dthvinh.factory.GsonFactory;
+import com.dthvinh.service.messaging.publisher.Publisher;
 import com.google.gson.Gson;
 
 public class PublisherImpl implements Publisher {
     private String bootStrapServer;
-    private final Gson mapper;
     private KafkaProducer<String, String> producer;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Gson mapper = GsonFactory.createGson();
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public PublisherImpl() {
-        this.mapper = new Gson();
     }
 
     public void init() {
+        logger.info("Kafka bootstrap server = {}", bootStrapServer);
+
+        if (bootStrapServer == null || bootStrapServer.isBlank()) {
+            throw new IllegalStateException("kafka.bootstrap.server not configured");
+        }
+
         Properties props = getConfig();
         setProducerProperties(props);
     }

@@ -2,13 +2,23 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
     xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
-                        http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd">
+                        http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+                        http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
+    <cm:property-placeholder persistent-id="com.dthvinh.order_service" update-strategy="reload" />
 
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
 
     <bean id="healthResource" class="com.dthvinh.rs.HealthResource" />
-    <bean id="orderResource" class="com.dthvinh.rs.OrderResource" />
+    <bean id="orderResource" class="com.dthvinh.rs.OrderResource">
+        <argument ref="publisher" />
+    </bean>
+
+    <bean id="publisher" class="com.dthvinh.service.messaging.publisher.impl.PublisherImpl"
+        init-method="init">
+        <property name="bootStrapServer" value="${kafka.bootstrap.server}" />
+    </bean>
 
     <jaxrs:server id="orderServiceApi" address="/api">
         <jaxrs:serviceBeans>

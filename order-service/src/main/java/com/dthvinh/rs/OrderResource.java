@@ -17,6 +17,7 @@ import com.dthvinh.order.api.CreateOrderRequest;
 import com.dthvinh.order.api.OrderResponse;
 import com.dthvinh.order.mapper.OrderMapper;
 import com.dthvinh.order.model.Order;
+import com.dthvinh.service.messaging.publisher.Publisher;
 
 @Path("/orders")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -25,6 +26,11 @@ public class OrderResource {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final OrderMapper mapper = new OrderMapper();
+    private Publisher publisher;
+
+    public OrderResource(Publisher publisher) {
+        this.publisher = publisher;
+    }
 
     @POST
     public Response createOrder(CreateOrderRequest request) {
@@ -36,8 +42,9 @@ public class OrderResource {
         Instant now = Instant.now();
 
         Order order = mapper.toOrder(request, orderId, now);
-        OrderResponse response = mapper.toResponse(order);
+        publisher.send("ORDER", orderId, order);
 
+        OrderResponse response = mapper.toResponse(order);
         logger.info("Created order id={} userId={} items={} totalAmount={} currency={}",
                 response.getId(), response.getUserId(),
                 response.getItems() != null ? response.getItems().size() : 0,

@@ -49,3 +49,45 @@ Optional overrides:
   - `mvn -Plocal-deploy -Ddocker.image.repository=order-service clean package`
 - Custom namespace / release:
   - `mvn -Plocal-deploy -Dhelm.namespace=dev -Dhelm.release.name=order-service clean package`
+
+## Cách dùng ConfigAdmin
+
+### Bước 1: Sửa Blueprint để dùng ConfigAdmin
+
+Thêm namespace cm:
+
+```
+xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+```
+
+Và schema:
+
+```
+http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0
+http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
+```
+
+### Bước 2: Khai báo property-placeholder
+
+```xml
+<cm:property-placeholder persistent-id="com.dthvinh.publisher"/>
+```
+
+### Lưu ý:
+
+- persistent-id phải trùng với tên file cfg.
+
+File phải đặt tại:
+
+KARAF_HOME/etc/com.dthvinh.publisher.cfg
+
+### Bước 3: Inject vào bean
+
+Thêm bean Publisher:
+
+```xml
+<bean id="publisher" class="com.dthvinh.rs.messaging.publisher.impl.PublisherImpl"
+      init-method="init">
+<property name="bootStrapServer" value="${kafka.bootstrap.server}"/>
+</bean>
+```
