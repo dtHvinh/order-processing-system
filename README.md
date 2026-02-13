@@ -41,11 +41,11 @@ The `order-service` module has a Maven profile that will:
 
 From `order-processing-system/order-service`:
 
-- `mvn -Plocal-deploy clean install`
+- `mvn -Plocal-deploy clean package`
 
 Optional overrides:
 
 - Custom image repo/name:
-  - `mvn -Plocal-deploy -Ddocker.image.repository=order-service clean install`
+  - `mvn -Plocal-deploy -Ddocker.image.repository=order-service clean package`
 - Custom namespace / release:
-  - `mvn -Plocal-deploy -Dhelm.namespace=dev -Dhelm.release.name=order-service clean install`
+  - `mvn -Plocal-deploy -Dhelm.namespace=dev -Dhelm.release.name=order-service clean package`
