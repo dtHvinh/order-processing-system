@@ -5,11 +5,13 @@
   "maven.terminal.favorites": [
     {
       "command": "clean package -Plocal-deploy -DskipTests",
-      "debug": false
+      "debug": false,
+      "alias": "For service"
     },
     {
       "command": "validate -Pk8s-nodeport-up",
-      "debug": false
+      "debug": false,
+      "alias": "For kafka-server"
     }
   ]
 }
