@@ -1,0 +1,12 @@
+# Local profile for connecting from your machine via kubectl port-forward.
+# Key idea: Kafka must ADVERTISE an address/port that your local clients can reach.
+
+kafka:
+  externalAdvertisedHost: "localhost"
+  # Use a normal container/service port for EXTERNAL listener when port-forwarding.
+  listeners: "INTERNAL://:9092,EXTERNAL://:9094,CONTROLLER://:9093"
+
+service:
+  type: ClusterIP
+  ports:
+    external: 9094

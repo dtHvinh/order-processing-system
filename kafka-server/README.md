@@ -13,10 +13,68 @@ This folder is a Helm chart that deploys:
 
 ## Install
 
-From the repo root:
+From the repo root (or anywhere, using a correct chart path):
 
 - Install/upgrade:
-  - `helm upgrade --install kafka-server .\kafka-server`
+  - `helm upgrade --install kafka-server .\kafka-server\src\main\resources\helm`
+
+## One command: deploy (NodePort) for external clients
+
+If you want Kafka to be reachable for services/clients outside the cluster via:
+
+- `192.168.65.3:30092`
+
+and Kafka UI to connect in-cluster automatically, run:
+
+- `mvn -f .\kafka-server\pom.xml -P k8s-nodeport-up validate`
+
+Defaults:
+
+- Namespace: `kafka`
+- Release: `kafka-server`
+- Kafka external host: `192.168.65.3`
+- Kafka external NodePort: `30092`
+- Kafka UI NodePort: `30090`
+
+Override if needed:
+
+- `mvn -f .\kafka-server\pom.xml -P k8s-nodeport-up -Dkafka.externalAdvertisedHost=192.168.65.3 -Dkafka.externalNodePort=30092 validate`
+
+## Local profile (port-forward Kafka for a local UI)
+
+If you run Kafka UI (or any Kafka client) **on your machine** (outside the cluster), Kafka must advertise `localhost` and a port that you forward.
+
+This chart includes a local override profile:
+
+- `values.portforward.yaml`
+
+Run:
+
+### Option A) Maven profile (recommended)
+
+From the repo root:
+
+- Install/upgrade Kafka + Kafka UI into namespace `kafka`:
+  - `mvn -f .\kafka-server\pom.xml -P k8s-local exec:exec@helm-install`
+- Wait for Kafka to be ready:
+  - `mvn -f .\kafka-server\pom.xml -P k8s-local exec:exec@rollout-wait`
+- Port-forward Kafka so local clients can connect (this blocks the terminal):
+  - `mvn -f .\kafka-server\pom.xml -P k8s-local exec:exec@port-forward-kafka`
+
+Kafka clients / Kafka UI running on your machine should use:
+
+- `localhost:9094`
+
+### Option B) PowerShell scripts
+
+- Install (creates namespace `kafka` by default):
+  - `powershell -File .\kafka-server\scripts\kafka-helm-local.ps1`
+- Port-forward Kafka EXTERNAL listener to your machine:
+  - `powershell -File .\kafka-server\scripts\kafka-portforward.ps1`
+
+Then configure your locally-running Kafka UI / client to use:
+
+- `localhost:9094`
 
 Useful checks:
 

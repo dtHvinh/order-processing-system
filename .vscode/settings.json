@@ -6,6 +6,10 @@
     {
       "command": "clean package -Plocal-deploy -DskipTests",
       "debug": false
+    },
+    {
+      "command": "validate -Pk8s-nodeport-up",
+      "debug": false
     }
   ]
 }
