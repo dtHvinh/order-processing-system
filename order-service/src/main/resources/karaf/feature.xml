@@ -15,8 +15,11 @@
         <feature>cxf-jackson</feature>
 
         <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle>
-        <bundle start-level="80">wrap:mvn:org.apache.kafka/kafka-clients/4.1.1</bundle>
-        <bundle start-level="80">mvn:com.google.code.gson/gson/2.13.2</bundle>
+        <bundle>wrap:mvn:org.apache.kafka/kafka-clients/4.1.1</bundle>
+        <bundle>mvn:com.google.code.gson/gson/2.13.2</bundle>
         <bundle>mvn:com.fasterxml.jackson.core/jackson-annotations/2.21</bundle>
+
+        <bundle>mvn:org.apache.commons/commons-pool2/2.12.0</bundle>
+        <bundle>mvn:org.json/json/20231013</bundle>
     </feature>
 </features>
