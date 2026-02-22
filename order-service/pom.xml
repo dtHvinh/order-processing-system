@@ -16,7 +16,6 @@
         <cxf.version>3.6.5</cxf.version>
         <javax.ws.rs.version>2.1.1</javax.ws.rs.version>
 
-        <!-- local docker/helm defaults (can be overridden via -D...) -->
         <docker.image.repository>${project.artifactId}</docker.image.repository>
         <docker.image.tag>${project.version}</docker.image.tag>
 

@@ -138,7 +138,6 @@
                                         <argument>
                                             service.nodePorts.external=${kafka.externalNodePort}</argument>
 
-                                        <!-- Optional: keep Kafka UI reachable via NodePort too -->
                                         <argument>--set</argument>
                                         <argument>kafka-ui.service.type=NodePort</argument>
                                         <argument>--set</argument>
