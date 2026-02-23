@@ -13,11 +13,18 @@
     <bean id="healthResource" class="com.dthvinh.rs.HealthResource" />
     <bean id="orderResource" class="com.dthvinh.rs.OrderResource">
         <argument ref="publisher" />
+        <argument ref="storage" />
     </bean>
 
     <bean id="publisher" class="com.dthvinh.service.messaging.publisher.impl.PublisherImpl"
         init-method="init">
         <property name="bootStrapServer" value="${kafka.bootstrap.server}" />
+    </bean>
+
+    <bean id="storage" class="com.dthvinh.service.storage.impl.OrderStorageImpl"
+        init-method="init">
+        <property name="redisServer" value="${redis.server}" />
+        <property name="keyPrefix" value="order:" />
     </bean>
 
     <jaxrs:server id="orderServiceApi" address="/api">

@@ -20,5 +20,6 @@
 
         <bundle>mvn:org.apache.commons/commons-pool2/2.12.0</bundle>
         <bundle>mvn:org.json/json/20231013</bundle>
+        <bundle>wrap:mvn:redis.clients/jedis/5.1.2</bundle>
     </feature>
 </features>

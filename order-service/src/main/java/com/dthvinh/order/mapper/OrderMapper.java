@@ -2,6 +2,7 @@ package com.dthvinh.order.mapper;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.dthvinh.order.api.CreateOrderItemRequest;
@@ -56,5 +57,19 @@ public class OrderMapper {
         response.setItems(items);
 
         return response;
+    }
+
+    public List<OrderResponse> toResponses(List<Order> orders) {
+        if (orders == null || orders.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<OrderResponse> responses = new ArrayList<>(orders.size());
+
+        for (Order order : orders) {
+            responses.add(toResponse(order));
+        }
+
+        return responses;
     }
 }
