@@ -15,8 +15,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dthvinh.common.storage.Storage;
 import com.dthvinh.product.model.Product;
-import com.dthvinh.service.storage.Storage;
 
 public class ProductStorageImpl implements Storage<Product> {
     private final Logger logger = LoggerFactory.getLogger(getClass());

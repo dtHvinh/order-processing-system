@@ -31,6 +31,12 @@ Kafka (Async Events)
 - What you may need to change on a different machine (IP/ports):
   - See [kafka-server/README.md](kafka-server/README.md)
 
+### How to run these service
+
+```
+mvn -pl <service-name> -am clean package -Plocal-deploy -DskipTests
+```
+
 ### Order Service (build + docker + helm)
 
 The `order-service` module has a Maven profile that will:

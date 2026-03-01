@@ -17,12 +17,12 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dthvinh.common.storage.Storage;
 import com.dthvinh.order.api.CreateOrderRequest;
 import com.dthvinh.order.api.OrderResponse;
 import com.dthvinh.order.mapper.OrderMapper;
 import com.dthvinh.order.model.Order;
 import com.dthvinh.service.messaging.publisher.Publisher;
-import com.dthvinh.service.storage.Storage;
 
 @Path("/orders")
 @Produces(MediaType.APPLICATION_JSON)

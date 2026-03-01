@@ -9,9 +9,9 @@ import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dthvinh.common.storage.Storage;
 import com.dthvinh.factory.GsonFactory;
 import com.dthvinh.order.model.Order;
-import com.dthvinh.service.storage.Storage;
 import com.google.gson.Gson;
 
 import redis.clients.jedis.Jedis;

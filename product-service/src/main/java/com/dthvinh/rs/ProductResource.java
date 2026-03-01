@@ -14,12 +14,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.dthvinh.common.storage.Storage;
 import com.dthvinh.product.api.CreateProductRequest;
 import com.dthvinh.product.api.ProductResponse;
 import com.dthvinh.product.api.UpdateProductRequest;
 import com.dthvinh.product.mapper.ProductMapper;
 import com.dthvinh.product.model.Product;
-import com.dthvinh.service.storage.Storage;
 
 @Path("/products")
 @Produces(MediaType.APPLICATION_JSON)
