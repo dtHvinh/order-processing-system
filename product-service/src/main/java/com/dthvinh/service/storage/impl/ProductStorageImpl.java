@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,9 +41,16 @@ public class ProductStorageImpl implements Storage<Product> {
             throw new IllegalStateException("Failed to validate postgres connection", e);
         }
 
+        try (Connection connection = openConnection(); Statement st = connection.createStatement()) {
+            st.execute("ALTER TABLE " + safeTableName() + " RENAME COLUMN quantity TO name");
+            st.execute("ALTER TABLE " + safeTableName() + " ALTER COLUMN name TYPE VARCHAR(255) USING name::varchar");
+        } catch (SQLException e) {
+            logger.info("Skipping products table migration (quantity->name): {}", e.getMessage());
+        }
+
         String sql = "CREATE TABLE IF NOT EXISTS " + safeTableName() + " ("
                 + "product_id VARCHAR(255) PRIMARY KEY, "
-                + "quantity INT NOT NULL, "
+                + "name VARCHAR(255) NOT NULL, "
                 + "unit_price BIGINT NOT NULL)";
 
         try (Connection connection = openConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -56,13 +64,14 @@ public class ProductStorageImpl implements Storage<Product> {
     public void save(String id, Product value) {
         requireId(id);
         Objects.requireNonNull(value, "value");
+        requireName(value.getName());
 
-        String sql = "INSERT INTO " + safeTableName() + " (product_id, quantity, unit_price) VALUES (?, ?, ?) "
-                + "ON CONFLICT (product_id) DO UPDATE SET quantity = EXCLUDED.quantity, unit_price = EXCLUDED.unit_price";
+        String sql = "INSERT INTO " + safeTableName() + " (product_id, name, unit_price) VALUES (?, ?, ?) "
+                + "ON CONFLICT (product_id) DO UPDATE SET name = EXCLUDED.name, unit_price = EXCLUDED.unit_price";
 
         try (Connection connection = openConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, id);
-            ps.setInt(2, value.getQuantity());
+            ps.setString(2, value.getName());
             ps.setLong(3, value.getUnitPrice());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -74,7 +83,7 @@ public class ProductStorageImpl implements Storage<Product> {
     public Optional<Product> get(String id) {
         requireId(id);
 
-        String sql = "SELECT product_id, quantity, unit_price FROM " + safeTableName() + " WHERE product_id = ?";
+        String sql = "SELECT product_id, name, unit_price FROM " + safeTableName() + " WHERE product_id = ?";
 
         try (Connection connection = openConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, id);
@@ -94,7 +103,7 @@ public class ProductStorageImpl implements Storage<Product> {
         int safeOffset = Integer.max(offset, 0);
         int safeLimit = Integer.max(limit, 1);
 
-        String sql = "SELECT product_id, quantity, unit_price FROM " + safeTableName()
+        String sql = "SELECT product_id, name, unit_price FROM " + safeTableName()
                 + " ORDER BY product_id OFFSET ? LIMIT ?";
 
         List<Product> result = new ArrayList<>();
@@ -163,40 +172,6 @@ public class ProductStorageImpl implements Storage<Product> {
         // No-op: this impl uses short-lived connections.
     }
 
-    /**
-     * Updates the quantity to an exact value.
-     */
-    public boolean updateQuantity(String productId, int quantity) {
-        requireId(productId);
-
-        String sql = "UPDATE " + safeTableName() + " SET quantity = ? WHERE product_id = ?";
-
-        try (Connection connection = openConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, quantity);
-            ps.setString(2, productId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new IllegalStateException("Failed to update quantity for product id=" + productId, e);
-        }
-    }
-
-    /**
-     * Atomically increments quantity by {@code delta}.
-     */
-    public boolean incrementQuantity(String productId, int delta) {
-        requireId(productId);
-
-        String sql = "UPDATE " + safeTableName() + " SET quantity = quantity + ? WHERE product_id = ?";
-
-        try (Connection connection = openConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, delta);
-            ps.setString(2, productId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new IllegalStateException("Failed to increment quantity for product id=" + productId, e);
-        }
-    }
-
     public boolean updateUnitPrice(String productId, long unitPrice) {
         requireId(productId);
 
@@ -222,7 +197,7 @@ public class ProductStorageImpl implements Storage<Product> {
     private Product mapRow(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setProductId(rs.getString("product_id"));
-        product.setQuantity(rs.getInt("quantity"));
+        product.setName(rs.getString("name"));
         product.setUnitPrice(rs.getLong("unit_price"));
         return product;
     }
@@ -230,6 +205,12 @@ public class ProductStorageImpl implements Storage<Product> {
     private void requireId(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("id is required");
+        }
+    }
+
+    private void requireName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name is required");
         }
     }
 }

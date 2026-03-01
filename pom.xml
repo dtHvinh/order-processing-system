@@ -12,9 +12,11 @@
     <name>Order Processing System</name>
 
     <modules>
+        <module>common</module>
         <module>kafka-server</module>
         <module>order-service</module>
         <module>product-service</module>
+        <module>inventory-service</module>
     </modules>
 
     <properties>
@@ -25,9 +27,11 @@
         <order-service.version>0.0.0</order-service.version>
         <order-service.port>30081</order-service.port>
         <product-service.port>30082</product-service.port>
+        <inventory-service.port>30083</inventory-service.port>
 
 
         <product-service.version>0.0.0</product-service.version>
+        <inventory-service.version>0.0.0</inventory-service.version>
 
         <javax.ws.rs.version>2.1.1</javax.ws.rs.version>
     </properties>

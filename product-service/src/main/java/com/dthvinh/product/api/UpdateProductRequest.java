@@ -1,18 +1,18 @@
 package com.dthvinh.product.api;
 
 public class UpdateProductRequest {
-    private int quantity;
+    private String name;
     private long unitPrice;
 
     public UpdateProductRequest() {
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getName() {
+        return name;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getUnitPrice() {

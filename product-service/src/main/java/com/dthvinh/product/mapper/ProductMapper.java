@@ -9,7 +9,7 @@ public class ProductMapper {
             return null;
         }
 
-        ProductResponse response = new ProductResponse(product.getProductId(), product.getQuantity(),
+        ProductResponse response = new ProductResponse(product.getProductId(), product.getName(),
                 product.getUnitPrice());
         return response;
     }

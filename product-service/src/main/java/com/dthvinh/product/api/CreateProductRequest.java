@@ -2,7 +2,7 @@ package com.dthvinh.product.api;
 
 public class CreateProductRequest {
     private String productId;
-    private int quantity;
+    private String name;
     private long unitPrice;
 
     public CreateProductRequest() {
@@ -16,12 +16,12 @@ public class CreateProductRequest {
         this.productId = productId;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getName() {
+        return name;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getUnitPrice() {

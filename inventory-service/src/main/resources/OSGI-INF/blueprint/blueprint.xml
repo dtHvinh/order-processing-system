@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+    xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                        http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+                        http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
+
+    <cm:property-placeholder persistent-id="com.dthvinh.inventory_service" update-strategy="reload" />
+
+    <reference id="dataSource"
+        interface="javax.sql.DataSource"
+        filter="(dataSourceName=inventoryDS)" />
+
+    <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+
+    <bean id="healthResource" class="com.dthvinh.rs.HealthResource">
+        <argument ref="storage" />
+    </bean>
+
+    <bean id="inventoryResource" class="com.dthvinh.rs.InventoryResource" depends-on="storage">
+        <argument ref="storage" />
+    </bean>
+
+    <bean id="storage" class="com.dthvinh.service.storage.impl.InventoryStorageImpl"
+        init-method="init">
+        <argument ref="dataSource" />
+        <property name="redisServer" value="${redis.server}" />
+        <property name="keyPrefix" value="${redis.keyPrefix}" />
+    </bean>
+
+    <jaxrs:server id="inventoryServiceApi" address="/api">
+        <jaxrs:serviceBeans>
+            <ref component-id="healthResource" />
+            <ref component-id="inventoryResource" />
+        </jaxrs:serviceBeans>
+
+        <jaxrs:providers>
+            <ref component-id="jsonProvider" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+</blueprint>

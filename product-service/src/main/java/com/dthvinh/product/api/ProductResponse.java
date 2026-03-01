@@ -3,15 +3,15 @@ package com.dthvinh.product.api;
 public class ProductResponse {
 
     private String productId;
-    private int quantity;
+    private String name;
     private long unitPrice;
 
     public ProductResponse() {
     }
 
-    public ProductResponse(String productId, int quantity, long unitPrice) {
+    public ProductResponse(String productId, String name, long unitPrice) {
         this.productId = productId;
-        this.quantity = quantity;
+        this.name = name;
         this.unitPrice = unitPrice;
     }
 
@@ -19,8 +19,8 @@ public class ProductResponse {
         return productId;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getName() {
+        return name;
     }
 
     public long getUnitPrice() {

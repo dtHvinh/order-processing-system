@@ -2,15 +2,15 @@ package com.dthvinh.product.model;
 
 public class Product {
     private String productId;
-    private int quantity;
+    private String name;
     private long unitPrice;
 
     public Product() {
     }
 
-    public Product(String productId, int quantity, long unitPrice) {
+    public Product(String productId, String name, long unitPrice) {
         this.productId = productId;
-        this.quantity = quantity;
+        this.name = name;
         this.unitPrice = unitPrice;
     }
 
@@ -22,12 +22,12 @@ public class Product {
         this.productId = productId;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getName() {
+        return name;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getUnitPrice() {

@@ -55,7 +55,7 @@ public class ProductResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response createProduct(CreateProductRequest request) {
-        Product product = new Product(request.getProductId(), request.getQuantity(), request.getUnitPrice());
+        Product product = new Product(request.getProductId(), request.getName(), request.getUnitPrice());
         storage.save(product.getProductId(), product);
 
         return Response.ok(request).build();
@@ -65,7 +65,7 @@ public class ProductResource {
     @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateProduct(@PathParam("productId") String productId, UpdateProductRequest request) {
-        Product product = new Product(productId, request.getQuantity(), request.getUnitPrice());
+        Product product = new Product(productId, request.getName(), request.getUnitPrice());
         storage.save(product.getProductId(), product);
 
         return Response.ok(request).build();
