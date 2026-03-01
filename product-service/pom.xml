@@ -12,14 +12,12 @@
     </parent>
 
     <groupId>com.dthvinh</groupId>
-    <artifactId>order-service</artifactId>
+    <artifactId>product-service</artifactId>
     <packaging>bundle</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cxf.version>3.6.5</cxf.version>
 
         <docker.image.repository>${project.artifactId}</docker.image.repository>
         <docker.image.tag>${project.version}</docker.image.tag>
@@ -64,12 +62,6 @@
             <version>2.21</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>5.1.2</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -86,6 +78,7 @@
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>com.dthvinh.api;version=${project.version}</Export-Package>
                         <Import-Package>*</Import-Package>
+                        <_removeheaders>Import-Service</_removeheaders>
                     </instructions>
                 </configuration>
             </plugin>
@@ -196,7 +189,7 @@
                                         <argument>--set</argument>
                                         <argument>image.tag=${docker.image.tag}</argument>
                                         <argument>--set</argument>
-                                        <argument>service.nodePort=${order-service.port}</argument>
+                                        <argument>service.nodePort=${product-service.port}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>

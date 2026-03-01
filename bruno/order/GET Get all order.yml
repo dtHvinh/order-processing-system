@@ -4,8 +4,8 @@ info:
   seq: 2
 
 http:
-  method: POST
-  url: "{{u}}orders"
+  method: GET
+  url: "{{uo}}orders"
   body:
     type: json
     data: |-

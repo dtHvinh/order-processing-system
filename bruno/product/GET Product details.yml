@@ -1,0 +1,15 @@
+info:
+  name: GET Product details
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{up}}products/details/be285d20-57db-4ff1-a941-9fdfe4916bd5"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

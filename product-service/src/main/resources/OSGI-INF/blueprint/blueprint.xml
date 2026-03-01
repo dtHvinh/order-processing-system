@@ -6,33 +6,27 @@
     xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
                         http://cxf.apache.org/blueprint/jaxrs http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
                         http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd">
-    <cm:property-placeholder persistent-id="com.dthvinh.order_service" update-strategy="reload" />
+    <reference id="dataSource"
+        interface="javax.sql.DataSource"
+        filter="(dataSourceName=productDS)" />
 
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
 
-    <bean id="healthResource" class="com.dthvinh.rs.HealthResource">
+    <bean id="healthResource" class="com.dthvinh.rs.HealthResource" />
+
+    <bean id="productResource" class="com.dthvinh.rs.ProductResource" depends-on="storage">
         <argument ref="storage" />
     </bean>
-    <bean id="orderResource" class="com.dthvinh.rs.OrderResource">
-        <argument ref="publisher" />
-        <argument ref="storage" />
-    </bean>
 
-    <bean id="publisher" class="com.dthvinh.service.messaging.publisher.impl.PublisherImpl"
+    <bean id="storage" class="com.dthvinh.service.storage.impl.ProductStorageImpl"
         init-method="init">
-        <property name="bootStrapServer" value="${kafka.bootstrap.server}" />
+        <argument ref="dataSource" />
     </bean>
 
-    <bean id="storage" class="com.dthvinh.service.storage.impl.OrderStorageImpl"
-        init-method="init">
-        <property name="redisServer" value="${redis.server}" />
-        <property name="keyPrefix" value="order:" />
-    </bean>
-
-    <jaxrs:server id="orderServiceApi" address="/api">
+    <jaxrs:server id="productServiceApi" address="/api">
         <jaxrs:serviceBeans>
             <ref component-id="healthResource" />
-            <ref component-id="orderResource" />
+            <ref component-id="productResource" />
         </jaxrs:serviceBeans>
 
         <jaxrs:providers>

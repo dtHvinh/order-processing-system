@@ -129,6 +129,8 @@ livenessProbe:
   httpGet:
     path: /cxf/api/health
     port: 8181
+  initialDelaySeconds: 8
+
 readinessProbe:
   httpGet:
     path: /cxf/api/health

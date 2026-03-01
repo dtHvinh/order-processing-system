@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dthvinh</groupId>
+    <artifactId>order-processing-system-parent</artifactId>
+    <version>0.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>Order Processing System</name>
+
+    <modules>
+        <module>kafka-server</module>
+        <module>order-service</module>
+        <module>product-service</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <order-service.version>0.0.0</order-service.version>
+        <order-service.port>30081</order-service.port>
+        <product-service.port>30082</product-service.port>
+
+
+        <product-service.version>0.0.0</product-service.version>
+
+        <javax.ws.rs.version>2.1.1</javax.ws.rs.version>
+    </properties>
+</project>

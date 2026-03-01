@@ -136,6 +136,17 @@ public class OrderStorageImpl implements Storage<Order> {
         jedis.close();
     }
 
+    @Override
+    public boolean isHealthy() {
+        try {
+            String response = jedis.ping();
+            return "PONG".equalsIgnoreCase(response);
+        } catch (Exception e) {
+            logger.error("Failed to ping Redis server");
+            return false;
+        }
+    }
+
     private String toKey(String id) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("id is required");

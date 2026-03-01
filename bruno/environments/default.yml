@@ -1,4 +1,6 @@
 name: default
 variables:
-  - name: u
+  - name: uo
     value: http://localhost:30081/cxf/api/
+  - name: up
+    value: http://localhost:30082/cxf/api/
