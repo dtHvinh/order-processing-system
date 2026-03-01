@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dthvinh.factory.GsonFactory;
-import com.dthvinh.service.messaging.publisher.Publisher;
+import com.dthvinh.messaging.publisher.Publisher;
 import com.google.gson.Gson;
 
 public class PublisherImpl implements Publisher {
