@@ -1,0 +1,581 @@
+
+deployment:
+  kong:
+    enabled: true
+  revisionHistoryLimit: 10
+
+  ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
+  ## for it to be considered available.
+  ## Specify the service account to create and to be assigned to the deployment / daemonset and for the migrations
+  serviceAccount:
+    create: true
+    automountServiceAccountToken: false
+  ## Optionally specify the name of the service account to create and the annotations to add.
+
+  ## Optionally specify any extra sidecar containers to be included in the deployment
+  ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
+
+  ## Define any volumes and mounts you want present in the Kong proxy container
+  test:
+    enabled: false
+  daemonset: false
+  hostNetwork: false
+  hostname: ""
+  prefixDir:
+    sizeLimit: 256Mi
+  tmpDir:
+    sizeLimit: 1Gi
+env:
+  database: "off"
+  router_flavor: "traditional"
+  nginx_worker_processes: "2"
+  proxy_access_log: /dev/stdout
+  admin_access_log: /dev/stdout
+  admin_gui_access_log: /dev/stdout
+  portal_api_access_log: /dev/stdout
+  proxy_error_log: /dev/stderr
+  admin_error_log: /dev/stderr
+  admin_gui_error_log: /dev/stderr
+  portal_api_error_log: /dev/stderr
+  prefix: /kong_prefix/
+envFrom: []
+extraLabels: {}
+image:
+  repository: kong
+  tag: "3.9"
+  effectiveSemver:
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+admin:
+  enabled: false
+  type: NodePort
+  loadBalancerClass:
+  annotations: {}
+  labels: {}
+
+  http:
+    enabled: false
+    servicePort: 8001
+    containerPort: 8001
+    parameters: []
+
+  tls:
+    enabled: true
+    servicePort: 8444
+    containerPort: 8444
+    parameters:
+    - http2
+    client:
+      caBundle: ""
+      secretName: ""
+  ingress:
+    enabled: false
+    ingressClassName:
+    hostname:
+    annotations: {}
+    path: /
+    pathType: ImplementationSpecific
+status:
+  enabled: true
+  http:
+    enabled: true
+    containerPort: 8100
+    parameters: []
+
+  tls:
+    enabled: false
+    containerPort: 8543
+    parameters: []
+clusterCaSecretName: ""
+cluster:
+  enabled: false
+  annotations: {}
+  labels: {}
+
+  tls:
+    enabled: false
+    servicePort: 8005
+    containerPort: 8005
+    parameters: []
+
+  type: ClusterIP
+  loadBalancerClass:
+  ingress:
+    enabled: false
+    ingressClassName:
+    hostname:
+    annotations: {}
+    path: /
+    pathType: ImplementationSpecific
+proxy:
+  enabled: true
+  # type: LoadBalancer
+  type: NodePort
+  loadBalancerClass: ""
+  loadBalancerSourceRanges: []
+  nameOverride: ""
+  annotations: {}
+  labels:
+    enable-metrics: "true"
+
+  http:
+    enabled: true
+    servicePort: 80
+    containerPort: 8000
+    parameters: []
+    nodePort: 30077
+
+  tls:
+    enabled: true
+    servicePort: 443
+    containerPort: 8443
+    parameters:
+    - http2
+    appProtocol: ""
+    nodePort: 30440
+  stream: []
+  ingress:
+    enabled: false
+    ingressClassName:
+    annotations: {}
+    labels: {}
+    hostname:
+    path: /
+    pathType: ImplementationSpecific
+    hosts: []
+udpProxy:
+  enabled: false
+  type: LoadBalancer
+  loadBalancerClass:
+  annotations: {}
+  labels: {}
+  stream: []
+plugins: {}
+secretVolumes: []
+migrations:
+  preUpgrade: true
+  postUpgrade: true
+  annotations:
+    sidecar.istio.io/inject: false
+  jobAnnotations: {}
+  backoffLimit:
+  ttlSecondsAfterFinished:
+  resources: {}
+  ## Optionally specify any extra sidecar containers to be included in the deployment
+  ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
+  ## Keep in mind these containers should be terminated along with the main
+  ## migration containers
+  ## Optionally set securitycontext for the wait-for-postgres migrations init container
+dblessConfig:
+  configMap: ""
+  secret: ""
+  config: |
+  ## Optionally specify any extra sidecar containers to be included in the
+  ## migration jobs
+  ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
+ingressController:
+  enabled: true
+  image:
+    repository: kong/kubernetes-ingress-controller
+    tag: "3.5"
+    effectiveSemver:
+  args: []
+
+  gatewayDiscovery:
+    enabled: false
+    generateAdminApiService: false
+    adminApiService:
+      namespace: ""
+      name: ""
+  watchNamespaces: []
+  env:
+    kong_admin_tls_skip_verify: true
+  envFrom: []
+
+  admissionWebhook:
+    matchPolicy: Equivalent
+    enabled: true
+    filterSecrets: false
+    failurePolicy: Ignore
+    port: 8080
+    certificate:
+      provided: false
+    namespaceSelector: {}
+    objectSelector:
+      matchExpressions:
+      - key: owner
+        operator: NotIn
+        values:
+        - helm
+    service:
+      labels: {}
+
+  ingressClass: kong
+  createIngressClass: true
+  ingressClassAnnotations: {}
+
+  ## Define any volumes and mounts you want present in the ingress controller container
+  ## Volumes are defined above in deployment.userDefinedVolumes
+
+  rbac:
+    create: true
+    enableClusterRoles: true
+    gatewayAPI:
+      enabled: true
+  livenessProbe:
+    httpGet:
+      path: "/healthz"
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: "/readyz"
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+  resources: {}
+
+  konnect:
+    enabled: false
+    runtimeGroupID: ""
+    controlPlaneID: ""
+    apiHostname: "us.kic.api.konghq.com"
+    tlsClientCertSecretName: "konnect-client-tls"
+
+    license:
+      enabled: false
+
+  adminApi:
+    tls:
+      client:
+        enabled: false
+        certProvided: false
+        secretName: ""
+        caSecretName: ""
+
+postgresql:
+  enabled: false
+  auth:
+    username: kong
+    database: kong
+  image:
+    registry: ""
+    repository: ""
+    tag: ""
+  service:
+    ports:
+      postgresql: "5432"
+  primary:
+    annotations:
+      "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
+    podSecurityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    containerSecurityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+
+certificates:
+  enabled: false
+  renewBefore: "360h0m0s"
+  duration: "2160h0m0s"
+  issuer: ""
+  clusterIssuer: ""
+  proxy:
+    enabled: true
+    issuer: ""
+    clusterIssuer: ""
+    commonName: "app.example"
+    dnsNames: []
+  admin:
+    enabled: true
+    issuer: ""
+    clusterIssuer: ""
+    commonName: "kong.example"
+    dnsNames: []
+  manager:
+    enabled: false
+    issuer: ""
+    clusterIssuer: ""
+    commonName: "manager.kong.example"
+    dnsNames: []
+  portal:
+    enabled: true
+    issuer: ""
+    clusterIssuer: ""
+    commonName: "developer.example"
+    dnsNames: []
+  cluster:
+    enabled: true
+    issuer: ""
+    clusterIssuer: ""
+    commonName: "kong_clustering"
+    dnsNames: []
+
+waitImage:
+  enabled: true
+  pullPolicy: IfNotPresent
+updateStrategy: {}
+resources: {}
+initContainerResources: {}
+readinessProbe:
+  httpGet:
+    path: "/status/ready"
+    port: status
+    scheme: HTTP
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+livenessProbe:
+  httpGet:
+    path: "/status"
+    port: status
+    scheme: HTTP
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+lifecycle:
+  preStop:
+    exec:
+      command:
+        - kong
+        - quit
+        - '--wait=15'
+terminationGracePeriodSeconds: 30
+tolerations: []
+nodeSelector: {}
+podAnnotations:
+  kuma.io/gateway: enabled
+  traffic.sidecar.istio.io/includeInboundPorts: ""
+podLabels: {}
+replicaCount: 1
+deploymentAnnotations: {}
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  annotations: {}
+  behavior: {}
+  ## targetCPUUtilizationPercentage only used if the cluster doesn't support autoscaling/v2 or autoscaling/v2beta
+  targetCPUUtilizationPercentage:
+  ## Otherwise for clusters that do support autoscaling/v2 or autoscaling/v2beta, use metrics
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+podDisruptionBudget:
+  enabled: false
+  unhealthyPodEvictionPolicy: IfHealthyBudget
+
+podSecurityPolicy:
+  enabled: false
+  labels: {}
+  annotations: {}
+  spec:
+    privileged: false
+    fsGroup:
+      rule: RunAsAny
+    runAsUser:
+      rule: RunAsAny
+    runAsGroup:
+      rule: RunAsAny
+    seLinux:
+      rule: RunAsAny
+    supplementalGroups:
+      rule: RunAsAny
+    volumes:
+      - 'configMap'
+      - 'secret'
+      - 'emptyDir'
+      - 'projected'
+    allowPrivilegeEscalation: false
+    hostNetwork: false
+    hostIPC: false
+    hostPID: false
+    readOnlyRootFilesystem: true
+
+
+priorityClassName: ""
+securityContext:
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext:
+  enabled: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+    - ALL
+
+## Optional DNS configuration for Kong pods
+
+serviceMonitor:
+  enabled: false
+  trustCRDsExist: false
+enterprise:
+  enabled: false
+  vitals:
+    enabled: true
+  portal:
+    enabled: false
+  rbac:
+    enabled: false
+    admin_gui_auth: basic-auth
+    session_conf_secret: "kong-session-config"  # CHANGEME
+    admin_gui_auth_conf_secret: CHANGEME-admin-gui-auth-conf-secret
+  smtp:
+    enabled: false
+    portal_emails_from: none@example.com
+    portal_emails_reply_to: none@example.com
+    admin_emails_from: none@example.com
+    admin_emails_reply_to: none@example.com
+    smtp_admin_emails: none@example.com
+    smtp_host: smtp.example.com
+    smtp_port: 587
+    smtp_auth_type: ''
+    smtp_ssl: nil
+    smtp_starttls: true
+    auth:
+      smtp_username: ''  # e.g. postmaster@example.com
+      smtp_password_secret: CHANGEME-smtp-password
+
+manager:
+  enabled: true
+  type: NodePort
+  loadBalancerClass:
+  annotations: {}
+  labels: {}
+
+  http:
+    enabled: true
+    servicePort: 8002
+    containerPort: 8002
+    parameters: []
+
+  tls:
+    enabled: true
+    servicePort: 8445
+    containerPort: 8445
+    parameters:
+    - http2
+
+  ingress:
+    enabled: false
+    ingressClassName:
+    hostname:
+    annotations: {}
+    path: /
+    pathType: ImplementationSpecific
+
+portal:
+  enabled: true
+  type: NodePort
+  loadBalancerClass:
+  annotations: {}
+  labels: {}
+
+  http:
+    enabled: true
+    servicePort: 8003
+    containerPort: 8003
+    parameters: []
+
+  tls:
+    enabled: true
+    servicePort: 8446
+    containerPort: 8446
+    parameters:
+    - http2
+
+  ingress:
+    enabled: false
+    ingressClassName:
+    hostname:
+    annotations: {}
+    path: /
+    pathType: ImplementationSpecific
+
+portalapi:
+  enabled: true
+  type: NodePort
+  loadBalancerClass:
+  annotations: {}
+  labels: {}
+
+  http:
+    enabled: true
+    servicePort: 8004
+    containerPort: 8004
+    parameters: []
+
+  tls:
+    enabled: true
+    servicePort: 8447
+    containerPort: 8447
+    parameters:
+    - http2
+
+  ingress:
+    enabled: false
+    ingressClassName:
+    hostname:
+    annotations: {}
+    path: /
+    pathType: ImplementationSpecific
+
+clustertelemetry:
+  enabled: false
+  annotations: {}
+  labels: {}
+
+  tls:
+    enabled: false
+    servicePort: 8006
+    containerPort: 8006
+    parameters: []
+
+  type: ClusterIP
+  loadBalancerClass:
+  ingress:
+    enabled: false
+    ingressClassName:
+    hostname:
+    annotations: {}
+    path: /
+    pathType: ImplementationSpecific
+
+extraConfigMaps: []
+
+extraSecrets: []
+
+extraObjects: []

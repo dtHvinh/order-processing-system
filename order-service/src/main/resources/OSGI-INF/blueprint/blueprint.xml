@@ -10,9 +10,6 @@
 
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
 
-    <bean id="healthResource" class="com.dthvinh.rs.HealthResource">
-        <argument ref="storage" />
-    </bean>
     <bean id="orderResource" class="com.dthvinh.rs.OrderResource">
         <argument ref="publisher" />
         <argument ref="storage" />
@@ -31,7 +28,6 @@
 
     <jaxrs:server id="orderServiceApi" address="/api">
         <jaxrs:serviceBeans>
-            <ref component-id="healthResource" />
             <ref component-id="orderResource" />
         </jaxrs:serviceBeans>
 

@@ -9,6 +9,8 @@ WORKDIR $KARAF_HOME
 
 COPY --from=karaf $KARAF_HOME/ $KARAF_HOME/
 
+RUN echo "org.apache.cxf.servlet.context=/" > ${KARAF_HOME}/etc/org.apache.cxf.osgi.cfg
+
 COPY src/main/resources/config/com.dthvinh.order_service.cfg ${KARAF_HOME}/etc/com.dthvinh.order_service.cfg
 
 COPY target/common-${APP_VERSION}.jar ${KARAF_HOME}/system/com/dthvinh/common/${APP_VERSION}/common-${APP_VERSION}.jar

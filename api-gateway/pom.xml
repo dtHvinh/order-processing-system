@@ -4,13 +4,60 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dthvinh</groupId>
+    <parent>
+        <groupId>com.dthvinh</groupId>
+        <artifactId>order-processing-system-parent</artifactId>
+        <version>0.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>api-gateway</artifactId>
-    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+
+        <helm.release.name>kong</helm.release.name>
+        <helm.namespace>default</helm.namespace>
+        <helm.values.file>${project.basedir}/src/main/resources/kong/values.yaml</helm.values.file>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>local-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <executions>
+                            <execution>
+                                <id>helm-upgrade-install</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>helm</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>upgrade</argument>
+                                        <argument>--install</argument>
+                                        <argument>${helm.release.name}</argument>
+                                        <argument>kong/kong</argument>
+                                        <argument>--namespace</argument>
+                                        <argument>${helm.namespace}</argument>
+                                        <argument>--create-namespace</argument>
+                                        <argument>--values</argument>
+                                        <argument>${helm.values.file}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

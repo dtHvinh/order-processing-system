@@ -2,6 +2,7 @@ package com.dthvinh.rs;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
@@ -70,5 +71,23 @@ public class OrderResource {
         List<OrderResponse> responses = mapper.toResponses(orders);
 
         return Response.ok(responses).build();
+    }
+
+    @GET
+    @Path("/health")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response health() {
+        if (storage.isHealthy()) {
+            return Response
+                    .ok(Map.of("status", "Order Service is healthy"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
+        return Response
+                .status(400)
+                .entity(Map.of("status", "Redis has not connected yet"))
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 }
