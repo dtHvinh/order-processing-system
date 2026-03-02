@@ -1,6 +1,7 @@
 package com.dthvinh.rs;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.ws.rs.Consumes;
@@ -88,5 +89,23 @@ public class InventoryResource {
 
         storage.delete(productId);
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/health")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response health() {
+        if (storage.isHealthy()) {
+            return Response
+                    .ok(Map.of("status", "Inventory Service is healthy"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
+        return Response
+                .status(400)
+                .entity(Map.of("status", "Dependencies are not healthy yet"))
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 }

@@ -22,14 +22,15 @@ service:
   port: 8181
   nodePort:
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: "kong"
+  annotations: 
+    konghq.com/strip-path: "false"
   hosts:
-    - host: chart-example.local
+    - host: ""
       paths:
-        - path: /
-          pathType: ImplementationSpecific
+        - path: /api/inventories
+          pathType: Prefix
   tls: []
 httpRoute:
   enabled: false
@@ -48,13 +49,14 @@ httpRoute:
 resources: {}
 livenessProbe:
   httpGet:
-    path: /cxf/api/health
-    port: http
+    path: /api/inventories/health
+    port: 8181
   initialDelaySeconds: 15
 readinessProbe:
   httpGet:
-    path: /cxf/api/health
-    port: http
+    path: /api/inventories/health
+    port: 8181
+  initialDelaySeconds: 15
 
 postgres:
   environmentVariables:

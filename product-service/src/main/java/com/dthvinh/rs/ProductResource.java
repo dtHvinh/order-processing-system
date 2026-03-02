@@ -1,6 +1,7 @@
 package com.dthvinh.rs;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.ws.rs.DELETE;
@@ -73,14 +74,31 @@ public class ProductResource {
 
     @DELETE
     @Path("/{productId}")
-    public Response deleteProduct(@PathParam("productId") String productId) {
+    public Response delete(@PathParam("productId") String productId) {
         Optional<Product> product = storage.get(productId);
         if (product.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         storage.delete(productId);
-
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/health")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response health() {
+        if (storage.isHealthy()) {
+            return Response
+                    .ok(Map.of("status", "Product Service is healthy"))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
+        return Response
+                .status(400)
+                .entity(Map.of("status", "Dependencies are not healthy yet"))
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 }

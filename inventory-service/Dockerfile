@@ -9,6 +9,8 @@ WORKDIR $KARAF_HOME
 
 COPY --from=karaf $KARAF_HOME/ $KARAF_HOME/
 
+RUN echo "org.apache.cxf.servlet.context=/" > ${KARAF_HOME}/etc/org.apache.cxf.osgi.cfg
+
 COPY src/main/resources/config/org.ops4j.datasource-inventory.cfg ${KARAF_HOME}/etc/org.ops4j.datasource-inventory.cfg
 COPY src/main/resources/config/com.dthvinh.inventory_service.cfg ${KARAF_HOME}/etc/com.dthvinh.inventory_service.cfg
 
