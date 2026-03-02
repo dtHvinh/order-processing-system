@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{up}}health"
+  url: "{{uo}}products/health"
   auth: inherit
 
 settings:

@@ -2,7 +2,3 @@ name: default
 variables:
   - name: uo
     value: http://localhost:30077/api/
-  - name: up
-    value: http://localhost:30082/cxf/api/
-  - name: ui
-    value: http://localhost:30083/cxf/api/

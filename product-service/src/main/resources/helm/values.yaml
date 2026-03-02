@@ -22,14 +22,15 @@ service:
   port: 8181
   nodePort:
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: "kong"
+  annotations: 
+    konghq.com/strip-path: "false"
   hosts:
-    - host: chart-example.local
+    - host: ""
       paths:
-        - path: /
-          pathType: ImplementationSpecific
+        - path: /api/products
+          pathType: Prefix
   tls: []
 httpRoute:
   enabled: false
@@ -48,12 +49,12 @@ httpRoute:
 resources: {}
 livenessProbe:
   httpGet:
-    path: /cxf/api/health
+    path: /api/products/health
     port: http
   initialDelaySeconds: 15
 readinessProbe:
   httpGet:
-    path: /cxf/api/health
+    path: /api/products/health
     port: http
 autoscaling:
   enabled: false

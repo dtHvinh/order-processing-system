@@ -12,8 +12,6 @@
 
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
 
-    <bean id="healthResource" class="com.dthvinh.rs.HealthResource" />
-
     <bean id="productResource" class="com.dthvinh.rs.ProductResource" depends-on="storage">
         <argument ref="storage" />
     </bean>
@@ -25,7 +23,6 @@
 
     <jaxrs:server id="productServiceApi" address="/api">
         <jaxrs:serviceBeans>
-            <ref component-id="healthResource" />
             <ref component-id="productResource" />
         </jaxrs:serviceBeans>
 

@@ -32,6 +32,16 @@ public class ProductResource {
     }
 
     @GET
+    @Path("/health")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response hello() {
+        return Response
+                .ok(Map.of("status", "Product Service is healthy"))
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+    @GET
     @Path("/details/{productId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProductDetails(@PathParam("productId") String productId) {

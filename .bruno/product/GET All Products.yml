@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{up}}products?limit=5&offset=0"
+  url: "{{uo}}products?limit=5&offset=0"
   params:
     - name: limit
       value: "5"

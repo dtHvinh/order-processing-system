@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{up}}products"
+  url: "{{uo}}products"
   body:
     type: json
     data: |-
