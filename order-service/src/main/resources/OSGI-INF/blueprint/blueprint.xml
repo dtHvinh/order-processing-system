@@ -15,6 +15,8 @@
         <argument ref="storage" />
     </bean>
 
+    <bean id="prometheusMetricsResource" class="com.dthvinh.rs.PrometheusMetricsResource" />
+
     <bean id="publisher" class="com.dthvinh.service.messaging.publisher.impl.PublisherImpl"
         init-method="init">
         <property name="bootStrapServer" value="${kafka.bootstrap.server}" />
@@ -34,6 +36,12 @@
         <jaxrs:providers>
             <ref component-id="jsonProvider" />
         </jaxrs:providers>
+    </jaxrs:server>
+
+    <jaxrs:server id="orderServiceMetrics" address="/metrics">
+        <jaxrs:serviceBeans>
+            <ref component-id="prometheusMetricsResource" />
+        </jaxrs:serviceBeans>
     </jaxrs:server>
 
 </blueprint>

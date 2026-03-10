@@ -2,3 +2,5 @@ name: default
 variables:
   - name: uo
     value: http://localhost:30077/api/
+  - name: u
+    value: http://localhost:30077/

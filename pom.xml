@@ -12,6 +12,7 @@
     <name>Order Processing System</name>
 
     <modules>
+        <module>metrics</module>
         <module>common</module>
         <module>messaging</module>
         <module>kafka-server</module>
@@ -36,5 +37,6 @@
         <inventory-service.version>0.0.0</inventory-service.version>
 
         <javax.ws.rs.version>2.1.1</javax.ws.rs.version>
+        <prometheus.client.version>0.16.0</prometheus.client.version>
     </properties>
 </project>

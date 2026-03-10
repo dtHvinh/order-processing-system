@@ -11,8 +11,14 @@ serviceAccount:
   automount: true
   annotations: {}
   name: ""
-podAnnotations: {}
 podLabels: {}
+
+# Prometheus (annotation-based scraping)
+# Scrape endpoint is exposed by the service at GET /metrics on the same port.
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/metrics"
+  prometheus.io/port: "8181"
 
 podSecurityContext: {}
 
@@ -32,6 +38,20 @@ ingress:
         - path: /api/orders
           pathType: Prefix
   tls: []
+
+metricsIngress:
+  enabled: true
+  className: "kong"
+  annotations:
+    konghq.com/strip-path: "false"
+    konghq.com/rewrite: /prometheus/metrics
+  hosts:
+    - host: ""
+      paths:
+        - path: /orders/internal/metrics
+          pathType: Exact
+  tls: []
+
 httpRoute:
   enabled: false
   annotations: {}
