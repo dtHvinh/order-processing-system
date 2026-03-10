@@ -24,8 +24,9 @@ podSecurityContext: {}
 
 securityContext: {}
 service:
-  type: ClusterIP
+  type: NodePort
   port: 8181
+  nodePort: 30081
 
 ingress:
   enabled: true
@@ -37,19 +38,6 @@ ingress:
       paths:
         - path: /api/orders
           pathType: Prefix
-  tls: []
-
-metricsIngress:
-  enabled: true
-  className: "kong"
-  annotations:
-    konghq.com/strip-path: "false"
-    konghq.com/rewrite: /prometheus/metrics
-  hosts:
-    - host: ""
-      paths:
-        - path: /orders/internal/metrics
-          pathType: Exact
   tls: []
 
 httpRoute:

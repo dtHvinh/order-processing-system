@@ -23,7 +23,6 @@ public class PrometheusMetricsResource {
             .create();
 
     static {
-        // registerCollectorSafely(new JvmMetricsCollector());
         DefaultExports.initialize();
         registerCollectorSafely(serviceUp);
         serviceUp.set(1);

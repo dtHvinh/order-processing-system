@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{u}}orders/internal/metrics"
+  url: http://localhost:30081/api/prometheus/metrics
   auth: inherit
 
 settings:
