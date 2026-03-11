@@ -31,12 +31,22 @@
     <jaxrs:server id="orderServiceApi" address="/api">
         <jaxrs:serviceBeans>
             <ref component-id="orderResource" />
+        </jaxrs:serviceBeans>
+
+        <jaxrs:providers>
+            <ref component-id="jsonProvider" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <jaxrs:server id="internalApi" address="/internal">
+        <jaxrs:serviceBeans>
             <ref component-id="prometheusMetricsResource" />
         </jaxrs:serviceBeans>
 
         <jaxrs:providers>
             <ref component-id="jsonProvider" />
         </jaxrs:providers>
+
     </jaxrs:server>
 
 </blueprint>

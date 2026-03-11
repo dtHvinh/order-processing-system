@@ -13,11 +13,9 @@ serviceAccount:
   name: ""
 podLabels: {}
 
-# Prometheus (annotation-based scraping)
-# Scrape endpoint is exposed by the service at GET /metrics on the same port.
 podAnnotations:
   prometheus.io/scrape: "true"
-  prometheus.io/path: "/metrics"
+  prometheus.io/path: "/internal/prometheus/metrics"
   prometheus.io/port: "8181"
 
 podSecurityContext: {}
