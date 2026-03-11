@@ -12,6 +12,7 @@
     <name>Order Processing System</name>
 
     <modules>
+        <module>monitoring</module>
         <module>metrics</module>
         <module>common</module>
         <module>messaging</module>
@@ -27,12 +28,15 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <order-service.version>0.0.0</order-service.version>
+        <prometheus.helm.namespace>default</prometheus.helm.namespace>
+
+        <prometheus.port>30080</prometheus.port>
         <order-service.port>30081</order-service.port>
         <product-service.port>30082</product-service.port>
         <inventory-service.port>30083</inventory-service.port>
 
 
+        <order-service.version>0.0.0</order-service.version>
         <product-service.version>0.0.0</product-service.version>
         <inventory-service.version>0.0.0</inventory-service.version>
 

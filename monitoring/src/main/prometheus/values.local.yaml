@@ -1,0 +1,8 @@
+prometheus-node-exporter:
+  hostRootFsMount:
+    mountPropagation: ""
+
+server:
+  service:
+    type: NodePort
+    nodePort:

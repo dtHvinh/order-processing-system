@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.dthvinh</groupId>
+        <artifactId>order-processing-system-parent</artifactId>
+        <version>0.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>com.dthvinh</groupId>
+    <artifactId>monitoring</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <helm.chart.dir>${project.basedir}/src/main/prometheus</helm.chart.dir>
+        <helm.local.values>${helm.chart.dir}/values.local.yaml</helm.local.values>
+        <helm.release.name>prometheus</helm.release.name>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>local-deploy</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <executions>
+                            <execution>
+                                <id>helm-upgrade-install</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>helm</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>upgrade</argument>
+                                        <argument>--install</argument>
+                                        <argument>${helm.release.name}</argument>
+                                        <argument>${helm.chart.dir}</argument>
+                                        <argument>-f</argument>
+                                        <argument>${helm.local.values}</argument>
+                                        <argument>--namespace</argument>
+                                        <argument>${prometheus.helm.namespace}</argument>
+                                        <argument>--create-namespace</argument>
+                                        <argument>--set</argument>
+                                        <argument>server.service.nodePort=${prometheus.port}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
