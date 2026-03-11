@@ -67,6 +67,24 @@
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.dthvinh</groupId>
+            <artifactId>metrics</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+            <version>${prometheus.client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_common</artifactId>
+            <version>${prometheus.client.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -124,6 +142,24 @@
                                     <directory>${project.basedir}/../common/target</directory>
                                     <includes>
                                         <include>common-${project.version}.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-metrics-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../metrics/target</directory>
+                                    <includes>
+                                        <include>metrics-${project.version}.jar</include>
                                     </includes>
                                 </resource>
                             </resources>

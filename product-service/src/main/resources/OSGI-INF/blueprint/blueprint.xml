@@ -16,6 +16,8 @@
         <argument ref="storage" />
     </bean>
 
+    <bean id="prometheusMetricsResource" class="com.dthvinh.rs.PrometheusMetricsResource" />
+
     <bean id="storage" class="com.dthvinh.service.storage.impl.ProductStorageImpl"
         init-method="init">
         <argument ref="dataSource" />
@@ -24,6 +26,16 @@
     <jaxrs:server id="productServiceApi" address="/api">
         <jaxrs:serviceBeans>
             <ref component-id="productResource" />
+        </jaxrs:serviceBeans>
+
+        <jaxrs:providers>
+            <ref component-id="jsonProvider" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <jaxrs:server id="internalApi" address="/internal">
+        <jaxrs:serviceBeans>
+            <ref component-id="prometheusMetricsResource" />
         </jaxrs:serviceBeans>
 
         <jaxrs:providers>

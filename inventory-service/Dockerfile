@@ -15,6 +15,7 @@ COPY src/main/resources/config/org.ops4j.datasource-inventory.cfg ${KARAF_HOME}/
 COPY src/main/resources/config/com.dthvinh.inventory_service.cfg ${KARAF_HOME}/etc/com.dthvinh.inventory_service.cfg
 
 COPY target/common-${APP_VERSION}.jar ${KARAF_HOME}/system/com/dthvinh/common/${APP_VERSION}/common-${APP_VERSION}.jar
+COPY target/metrics-${APP_VERSION}.jar ${KARAF_HOME}/system/com/dthvinh/metrics/${APP_VERSION}/metrics-${APP_VERSION}.jar
 COPY target/inventory-service-${APP_VERSION}.jar ${KARAF_HOME}/system/com/dthvinh/inventory-service/${APP_VERSION}/inventory-service-${APP_VERSION}.jar
 COPY target/feature.xml ${KARAF_HOME}/deploy/feature.xml
 

@@ -16,6 +16,9 @@
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
 
 
+    <bean id="prometheusMetricsResource" class="com.dthvinh.rs.PrometheusMetricsResource" />
+
+
     <bean id="inventoryResource" class="com.dthvinh.rs.InventoryResource" depends-on="storage">
         <argument ref="storage" />
     </bean>
@@ -30,6 +33,16 @@
     <jaxrs:server id="inventoryServiceApi" address="/api">
         <jaxrs:serviceBeans>
             <ref component-id="inventoryResource" />
+        </jaxrs:serviceBeans>
+
+        <jaxrs:providers>
+            <ref component-id="jsonProvider" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <jaxrs:server id="internalApi" address="/internal">
+        <jaxrs:serviceBeans>
+            <ref component-id="prometheusMetricsResource" />
         </jaxrs:serviceBeans>
 
         <jaxrs:providers>

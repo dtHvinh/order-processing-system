@@ -8,16 +8,26 @@
         mvn:org.apache.cxf.karaf/apache-cxf/3.5.6/xml/features
     </repository>
 
+    <feature name="prometheus-metrics" version="${prometheus.client.version}">
+        <bundle>wrap:mvn:io.prometheus/simpleclient/${prometheus.client.version}</bundle>
+        <bundle>wrap:mvn:io.prometheus/simpleclient_common/${prometheus.client.version}</bundle>
+        <bundle>wrap:mvn:io.prometheus/simpleclient_tracer_common/${prometheus.client.version}</bundle>
+        <bundle>wrap:mvn:io.prometheus/simpleclient_tracer_otel/${prometheus.client.version}</bundle>
+        <bundle>wrap:mvn:io.prometheus/simpleclient_tracer_otel_agent/${prometheus.client.version}</bundle>
+    </feature>
+
     <feature name="product-service-api" version="${project.version}">
         <feature>cxf-jaxrs</feature>
         <feature>aries-blueprint</feature>
         <feature>cxf-jackson</feature>
+        <feature version="${prometheus.client.version}">prometheus-metrics</feature>
 
         <feature>pax-jdbc</feature>
         <feature>pax-jdbc-config</feature>
         <feature>pax-jdbc-pool-dbcp2</feature>
 
         <bundle>mvn:${project.groupId}/common/${project.version}</bundle>
+        <bundle>mvn:${project.groupId}/metrics/${project.version}</bundle>
         <bundle>mvn:${project.groupId}/${project.artifactId}/${project.version}</bundle>
         <bundle>wrap:mvn:org.apache.kafka/kafka-clients/4.1.1</bundle>
         <bundle>mvn:com.google.code.gson/gson/2.13.2</bundle>

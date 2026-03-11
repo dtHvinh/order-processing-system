@@ -11,7 +11,10 @@ serviceAccount:
   automount: true
   annotations: {}
   name: ""
-podAnnotations: {}
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/internal/prometheus/metrics"
+  prometheus.io/port: "8181"
 podLabels: {}
 
 podSecurityContext: {}
@@ -24,7 +27,7 @@ service:
 ingress:
   enabled: true
   className: "kong"
-  annotations: 
+  annotations:
     konghq.com/strip-path: "false"
   hosts:
     - host: ""
