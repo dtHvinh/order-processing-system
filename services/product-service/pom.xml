@@ -6,21 +6,17 @@
 
     <parent>
         <groupId>com.dthvinh</groupId>
-        <artifactId>order-processing-system-parent</artifactId>
+        <artifactId>services</artifactId>
         <version>0.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>order-service</artifactId>
+    <artifactId>product-service</artifactId>
     <packaging>bundle</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cxf.version>3.6.5</cxf.version>
-
-        <prometheus.client.version>0.16.0</prometheus.client.version>
 
         <docker.image.repository>${project.artifactId}</docker.image.repository>
         <docker.image.tag>${project.version}</docker.image.tag>
@@ -67,12 +63,6 @@
         </dependency>
 
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>5.1.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.dthvinh</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
@@ -81,12 +71,6 @@
         <dependency>
             <groupId>com.dthvinh</groupId>
             <artifactId>metrics</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.dthvinh</groupId>
-            <artifactId>messaging</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -117,6 +101,7 @@
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>com.dthvinh.api;version=${project.version}</Export-Package>
                         <Import-Package>*</Import-Package>
+                        <_removeheaders>Import-Service</_removeheaders>
                     </instructions>
                 </configuration>
             </plugin>
@@ -140,6 +125,42 @@
                                         <include>feature.xml</include>
                                     </includes>
                                     <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-common-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../common/target</directory>
+                                    <includes>
+                                        <include>common-${project.version}.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-metrics-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../metrics/target</directory>
+                                    <includes>
+                                        <include>metrics-${project.version}.jar</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
@@ -178,50 +199,6 @@
             <id>local-deploy</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.7.1</version>
-                        <executions>
-                            <execution>
-                                <id>copy-local-bundles</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>com.dthvinh</groupId>
-                                            <artifactId>common</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>jar</type>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
-                                            <destFileName>common-${project.version}.jar</destFileName>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>com.dthvinh</groupId>
-                                            <artifactId>messaging</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>jar</type>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
-                                            <destFileName>messaging-${project.version}.jar</destFileName>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>com.dthvinh</groupId>
-                                            <artifactId>metrics</artifactId>
-                                            <version>${project.version}</version>
-                                            <type>jar</type>
-                                            <outputDirectory>${project.build.directory}</outputDirectory>
-                                            <destFileName>metrics-${project.version}.jar</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                    <overWriteIfNewer>true</overWriteIfNewer>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
@@ -271,7 +248,7 @@
                                         <argument>--set</argument>
                                         <argument>image.tag=${docker.image.tag}</argument>
                                         <argument>--set</argument>
-                                        <argument>service.nodePort=${order-service.port}</argument>
+                                        <argument>service.nodePort=${product-service.port}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>

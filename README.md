@@ -31,11 +31,20 @@ Kafka (Async Events)
 - What you may need to change on a different machine (IP/ports):
   - See [kafka-server/README.md](kafka-server/README.md)
 
-### How to run these service
+### How to run these services
 
 ```
 mvn -pl <service-name> -am clean package -Plocal-deploy -DskipTests
 ```
+
+Examples after moving services under `services/*`:
+
+- Order Service:
+  - `mvn -pl services/order-service -am clean package -Plocal-deploy -DskipTests`
+- Product Service:
+  - `mvn -pl services/product-service -am clean package -Plocal-deploy -DskipTests`
+- Inventory Service:
+  - `mvn -pl services/inventory-service -am clean package -Plocal-deploy -DskipTests`
 
 ### Order Service (build + docker + helm)
 
@@ -45,7 +54,7 @@ The `order-service` module has a Maven profile that will:
 - build a Docker image tagged with the Maven `${project.version}`,
 - run `helm upgrade --install` while setting `image.repository` and `image.tag` to match.
 
-From `order-processing-system/order-service`:
+From `order-processing-system/services/order-service`:
 
 - `mvn -Plocal-deploy clean package`
 
@@ -97,4 +106,3 @@ Thêm bean Publisher:
 <property name="bootStrapServer" value="${kafka.bootstrap.server}"/>
 </bean>
 ```
-

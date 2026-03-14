@@ -4,7 +4,7 @@
   "github.copilot.nextEditSuggestions.enabled": false,
   "maven.terminal.favorites": [
     {
-      "command": "-pl order-service -am clean package -Plocal-deploy -DskipTests",
+      "command": "-pl services/order-service -am clean package -Plocal-deploy -DskipTests",
       "debug": false,
       "alias": "For service"
     },

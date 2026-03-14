@@ -17,9 +17,7 @@
         <module>common</module>
         <module>messaging</module>
         <module>kafka-server</module>
-        <module>order-service</module>
-        <module>product-service</module>
-        <module>inventory-service</module>
+        <module>services</module>
         <module>api-gateway</module>
     </modules>
 

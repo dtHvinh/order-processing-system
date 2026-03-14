@@ -6,17 +6,18 @@
 
     <parent>
         <groupId>com.dthvinh</groupId>
-        <artifactId>order-processing-system-parent</artifactId>
+        <artifactId>services</artifactId>
         <version>0.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>product-service</artifactId>
+    <artifactId>inventory-service</artifactId>
     <packaging>bundle</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <docker.image.repository>${project.artifactId}</docker.image.repository>
         <docker.image.tag>${project.version}</docker.image.tag>
@@ -49,17 +50,22 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-            <version>4.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.21</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>5.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.10</version>
         </dependency>
 
         <dependency>
@@ -89,6 +95,8 @@
 
     <build>
         <plugins>
+
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -248,7 +256,7 @@
                                         <argument>--set</argument>
                                         <argument>image.tag=${docker.image.tag}</argument>
                                         <argument>--set</argument>
-                                        <argument>service.nodePort=${product-service.port}</argument>
+                                        <argument>service.nodePort=${inventory-service.port}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
