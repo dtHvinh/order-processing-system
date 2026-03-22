@@ -12,13 +12,11 @@
     <name>Order Processing System</name>
 
     <modules>
-        <module>monitoring</module>
-        <module>metrics</module>
+        <module>observability</module>
         <module>common</module>
         <module>messaging</module>
-        <module>kafka-server</module>
+        <module>infra</module>
         <module>services</module>
-        <module>api-gateway</module>
     </modules>
 
     <properties>

@@ -165,7 +165,7 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/../metrics/target</directory>
+                                    <directory>${project.basedir}/../../observability/metrics/target</directory>
                                     <includes>
                                         <include>metrics-${project.version}.jar</include>
                                     </includes>

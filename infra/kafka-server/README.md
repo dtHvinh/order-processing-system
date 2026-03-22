@@ -16,7 +16,7 @@ This folder is a Helm chart that deploys:
 From the repo root (or anywhere, using a correct chart path):
 
 - Install/upgrade:
-  - `helm upgrade --install kafka-server .\kafka-server\src\main\resources\helm`
+  - `helm upgrade --install kafka-server .\infra\kafka-server\src\main\resources\helm`
 
 ## One command: deploy (NodePort) for external clients
 
@@ -26,7 +26,7 @@ If you want Kafka to be reachable for services/clients outside the cluster via:
 
 and Kafka UI to connect in-cluster automatically, run:
 
-- `mvn -f .\kafka-server\pom.xml -P k8s-nodeport-up validate`
+- `mvn -f .\infra\kafka-server\pom.xml -P k8s-nodeport-up validate`
 
 Defaults:
 
@@ -38,7 +38,7 @@ Defaults:
 
 Override if needed:
 
-- `mvn -f .\kafka-server\pom.xml -P k8s-nodeport-up -Dkafka.externalAdvertisedHost=192.168.65.3 -Dkafka.externalNodePort=30092 validate`
+- `mvn -f .\infra\kafka-server\pom.xml -P k8s-nodeport-up -Dkafka.externalAdvertisedHost=192.168.65.3 -Dkafka.externalNodePort=30092 validate`
 
 ## Local profile (port-forward Kafka for a local UI)
 
@@ -55,11 +55,11 @@ Run:
 From the repo root:
 
 - Install/upgrade Kafka + Kafka UI into namespace `kafka`:
-  - `mvn -f .\kafka-server\pom.xml -P k8s-local exec:exec@helm-install`
+  - `mvn -f .\infra\kafka-server\pom.xml -P k8s-local exec:exec@helm-install`
 - Wait for Kafka to be ready:
-  - `mvn -f .\kafka-server\pom.xml -P k8s-local exec:exec@rollout-wait`
+  - `mvn -f .\infra\kafka-server\pom.xml -P k8s-local exec:exec@rollout-wait`
 - Port-forward Kafka so local clients can connect (this blocks the terminal):
-  - `mvn -f .\kafka-server\pom.xml -P k8s-local exec:exec@port-forward-kafka`
+  - `mvn -f .\infra\kafka-server\pom.xml -P k8s-local exec:exec@port-forward-kafka`
 
 Kafka clients / Kafka UI running on your machine should use:
 
@@ -68,9 +68,9 @@ Kafka clients / Kafka UI running on your machine should use:
 ### Option B) PowerShell scripts
 
 - Install (creates namespace `kafka` by default):
-  - `powershell -File .\kafka-server\scripts\kafka-helm-local.ps1`
+  - `powershell -File .\infra\kafka-server\scripts\kafka-helm-local.ps1`
 - Port-forward Kafka EXTERNAL listener to your machine:
-  - `powershell -File .\kafka-server\scripts\kafka-portforward.ps1`
+  - `powershell -File .\infra\kafka-server\scripts\kafka-portforward.ps1`
 
 Then configure your locally-running Kafka UI / client to use:
 
@@ -142,7 +142,7 @@ This is useful when:
 
 If you install into a different namespace, remember to include `-n <ns> --create-namespace`:
 
-- `helm upgrade --install kafka-server .\kafka-server -n ms --create-namespace`
+- `helm upgrade --install kafka-server .\infra\kafka-server -n ms --create-namespace`
 
 Then use:
 

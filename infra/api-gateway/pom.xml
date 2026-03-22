@@ -8,19 +8,18 @@
         <groupId>com.dthvinh</groupId>
         <artifactId>order-processing-system-parent</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>com.dthvinh</groupId>
-    <artifactId>monitoring</artifactId>
+    <artifactId>api-gateway</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
-        <helm.chart.dir>${project.basedir}/src/main/prometheus</helm.chart.dir>
-        <helm.local.values>${helm.chart.dir}/values.local.yaml</helm.local.values>
-        <helm.release.name>prometheus</helm.release.name>
+        <helm.release.name>kong</helm.release.name>
+        <helm.namespace>default</helm.namespace>
+        <helm.values.file>${project.basedir}/src/main/resources/kong/values.yaml</helm.values.file>
     </properties>
 
     <profiles>
@@ -46,14 +45,12 @@
                                         <argument>upgrade</argument>
                                         <argument>--install</argument>
                                         <argument>${helm.release.name}</argument>
-                                        <argument>${helm.chart.dir}</argument>
-                                        <argument>-f</argument>
-                                        <argument>${helm.local.values}</argument>
+                                        <argument>kong/kong</argument>
                                         <argument>--namespace</argument>
-                                        <argument>${prometheus.helm.namespace}</argument>
+                                        <argument>${helm.namespace}</argument>
                                         <argument>--create-namespace</argument>
-                                        <argument>--set</argument>
-                                        <argument>server.service.nodePort=${prometheus.port}</argument>
+                                        <argument>--values</argument>
+                                        <argument>${helm.values.file}</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -63,5 +60,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

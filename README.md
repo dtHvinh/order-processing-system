@@ -27,9 +27,9 @@ Kafka (Async Events)
 ### Kafka + Kafka UI
 
 - Install/upgrade:
-  - `helm upgrade --install kafka-server .\kafka-server`
+  - `helm upgrade --install kafka-server .\infra\kafka-server`
 - What you may need to change on a different machine (IP/ports):
-  - See [kafka-server/README.md](kafka-server/README.md)
+  - See [infra/kafka-server/README.md](infra/kafka-server/README.md)
 
 ### How to run these services
 

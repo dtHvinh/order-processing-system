@@ -8,7 +8,7 @@
         <groupId>com.dthvinh</groupId>
         <artifactId>order-processing-system-parent</artifactId>
         <version>0.0.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>com.dthvinh</groupId>
