@@ -37,6 +37,19 @@ Kafka (Async Events)
 mvn -pl <service-name> -am clean package -Plocal-deploy -DskipTests
 ```
 
+### Maven install + Nexus publish
+
+- Running `mvn install` now does both:
+  - installs artifacts to local Maven cache (`.m2`),
+  - deploys artifacts to Nexus at `http://localhost:9091`.
+- Release artifacts are sent to `http://localhost:9091/repository/maven-releases`.
+- Snapshot artifacts are sent to `http://localhost:9091/repository/maven-snapshots`.
+- To install locally without pushing to Nexus, run:
+
+```
+mvn install -Dmaven.deploy.skip=true
+```
+
 Examples after moving services under `services/*`:
 
 - Order Service:
